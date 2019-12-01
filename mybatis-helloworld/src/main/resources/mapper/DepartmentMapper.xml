@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cj.mybatis.mapper.DepartmentMapper">
+
+  <!-- CRUD 
+  	select
+  	insert
+  	update
+  	delete
+  -->
+  
+  <!-- ============================================================== -->
+  
+  <!-- 
+  	public Department getDepartment(Integer id);
+  	=> resultType : Department
+  -->
+  <select id="getDepartment" resultType="com.cj.mybatis.entity.Department">
+    <!-- select * from pe_department where id = ${id} -->
+    select * from pe_department where id = #{id}
+  </select>
+  
+  <!-- 
+  	public Map<String,Object> getDepartmentMap(Integer id); 
+  	=> resultType : map
+  -->
+  <select id="getDepartmentMap" resultType="map">
+    select * from pe_department where id = #{id}
+  </select>
+  
+  <!-- 
+  	public List<Department> listDepartment();
+    => resultType : Department (集合类则指定集合中的元素类型) 
+  -->
+  <select id="listDepartment" resultType="com.cj.mybatis.entity.Department">
+  	select * from pe_department
+  </select>
+  
+  <!-- 
+	   @MapKey("id")  // 将结果集封装成Map
+	   public Map<Integer,Department> listAndReturnMap(); 
+	   => resultType: Department
+   -->
+   <select id="listDepartmentMap" resultType="com.cj.mybatis.entity.Department">
+    select * from pe_department;
+   </select>
+  
+  
+  <!-- ============================================================== -->
+  
+  <insert id="insertDepartment">
+  	insert into pe_department(name,remark) values (#{name},#{remark})
+  </insert>
+  
+  <!-- useGeneratedKeys=false/true 是否使用产生的主键； keyProperty: 配置获取到的主键注入javaBean的哪个属性中 -->
+  <insert id="insertDepartmentAndReturnId" useGeneratedKeys="true" keyProperty="id">
+  	insert into pe_department(name,remark) values (#{name},#{remark})
+  </insert>
+  
+  <insert id="insertDepartmentByNextSeq">
+  	<!-- order="BEFORE"/"AFTER" 在sql执行前/后执行 -->
+  	<!-- <selectKey keyProperty="id" order="BEFORE" resultType="Integer">
+  		select max(id)+1 from pe_department
+  	</selectKey> -->
+  	<selectKey keyProperty="id" order="BEFORE" resultType="Integer">
+  		<!-- 注意加allowMultiQueries=true这里才可执行多条（ jdbc:mysql://localhost:3306/demo?allowMultiQueries=true） -->
+  		update pe_generator set next=next+1 where segment_name='dept_seq';
+  		select next from pe_generator where segment_name='dept_seq'
+  	</selectKey>
+  	insert into pe_department(id,name,remark) values (#{id},#{name},#{remark})
+  </insert>
+  
+  <!-- ============================================================== -->
+  
+  <update id="updateDepartment">
+  	update pe_department set name=#{name},remark=#{remark} where id=#{id}
+  </update>
+  
+  <!-- ============================================================== -->
+  
+  <delete id="deleteDepartment">
+  	delete from pe_department where id=#{id}
+  </delete>
+  
+   <!-- ============================================================== -->
+   
+   <!-- 多个参数
+	   public List<Department> listByParams1(String name,String remark); 
+	   => available parameters are [arg0,arg1,param1,param2]
+	   
+	   public List<Department> listByParams2(@Param("name")String name,@Param("remark")String remark); 
+	   => available parameters are [name,remark,param1,param2]
+   -->
+   <select id="listByParams1" resultType="com.cj.mybatis.entity.Department">
+    <!-- select * from pe_department where name like #{arg0} or remark like #{arg1} -->
+    select * from pe_department where name like #{param1} or remark like #{param2}
+   </select>
+   <select id="listByParams2" resultType="com.cj.mybatis.entity.Department">
+    <!-- select * from pe_department where name like #{param1} or remark like #{param2} -->
+    select * from pe_department where name like #{name} or remark like #{remark}
+   </select>
+   
+  <!-- 单个参数
+  	public List<Department> listByMap(Map params);
+	public List<Department> listByExample(Department department);
+	public List<Department> listByIds(List<Integer> ids);
+  --> 
+  <select id="listByMap" resultType="com.cj.mybatis.entity.Department">
+   	select * from pe_department where name like #{name} or remark like #{remark}
+  </select>
+   <select id="listByExample" resultType="com.cj.mybatis.entity.Department">
+   	select * from pe_department where name like #{name} or remark like #{remark}
+  </select>
+  <select id="listByIds" resultType="com.cj.mybatis.entity.Department">
+    select * from pe_department where id in (#{list[0]})
+   </select>
+  
+  <!-- ============================================================== -->
+  
+  
+   
+</mapper>

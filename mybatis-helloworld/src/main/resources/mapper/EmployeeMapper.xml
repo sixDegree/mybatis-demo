@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cj.mybatis.mapper.EmployeeMapper">
+  <!-- id: 标识 ;	resultType:	返回值类型 ;	#{id}: 从传递过来的参数中取出id值   -->
+  <select id="getEmployee" resultType="Employee" databaseId="mysql"> <!-- Employee/com.cj.mybatis.entity.Employee -->
+    <!-- select id,name,remark,department_id as departmentId from pe_employee where id = #{id} -->
+    select * from pe_employee where id = #{id}
+  </select>
+  
+  <select id="listEmployees" resultType="Employee">
+  	select * from pe_employee
+  </select>
+  
+  <select id="listEmployeesByDept" resultType="Employee">
+  	select * from pe_employee where department_id=#{deptId}
+  </select>
+  
+  <select id="listEmployeesByExample" resultType="Employee">
+  	select * from pe_employee 
+  	where 1=1
+  	<if test="id!=null"> and id=#{id} </if>
+  	<if test="name!=null"> and name=#{name} </if>
+  	<if test="remark!=null"> and remark=#{remark} </if>
+  </select>
+  
+  <select id="listEmployeesByNameLike" resultType="Employee">
+  	<bind name="namePatten" value="'%' + name + '%'" />
+    select * from pe_employee where name like #{namePatten}
+  </select>
+  
+  <select id="listEmployeesByDeptIds" resultType="Employee">
+  	select * from pe_employee where department_id in 
+  	<foreach collection="list" item="deptId" separator="," open="(" close=")">
+  		#{deptId}
+  	</foreach>
+  </select>
+  
+  <update id="updateEmployee">
+  	<!-- update pe_employee
+  	<set>
+  		<if test="name!=null">name=#{name},</if>
+  		<if test="remark!=null">remark=#{remark},</if>
+  		<if test="departmentId!=null">department_id=#{departmentId}</if>
+  	</set>
+  	where id=#{id} -->
+  	update pe_employee
+  	<set>
+  		<include refid="empUpdateSet"/>
+  	</set>
+  	where id=#{id}
+  </update>
+  
+  <sql id="empUpdateSet">
+	<if test="name!=null">name=#{name},</if>
+	<if test="remark!=null">remark=#{remark},</if>
+	<if test="departmentId!=null">department_id=#{departmentId}</if>
+  </sql>
+  
+</mapper>

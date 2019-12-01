@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cj.mybatis.mapper.DepartmentWithEmployeesMapper">
+  
+  <!-- <resultMap type="com.cj.mybatis.entity.DepartmentWithEmployees" id="DeptWithEmpsMap">
+  	<id column="id" property="id"/>
+  	<result column="name" property="name"/>
+  	<result column="remark" property="remark"/>
+  	<collection property="employees" ofType="com.cj.mybatis.entity.Employee">
+  		<id column="emp_id" property="id"/>
+  		<result column="emp_name" property="name"/>
+  		<result column="emp_remark" property="remark" />
+  		<result column="emp_deptartment_id" property="departmentId" />
+  	</collection>
+  </resultMap> -->
+  <resultMap type="com.cj.mybatis.entity.DepartmentWithEmployees" 
+  	id="DeptWithEmpsMap" autoMapping="true">
+  	<id column="id" property="id"/> <!-- must set! -->
+  	<collection property="employees" ofType="com.cj.mybatis.entity.Employee" 
+  		columnPrefix="emp_" autoMapping="true">
+  	</collection>
+  </resultMap>
+  <select id="getDepartment" resultMap="DeptWithEmpsMap">
+    select
+    	a.id id,a.name name,a.remark remark,
+    	b.id emp_id,b.name emp_name,b.remark emp_remark,b.department_id emp_department_id
+    from pe_department a 
+    left join pe_employee b on a.id=b.department_id 
+    where a.id=#{id}
+  </select>
+  
+  <resultMap type="com.cj.mybatis.entity.DepartmentWithEmployees" id="DeptWithEmpsLazyMap">
+  	<id column="id" property="id"/>
+  	<result column="name" property="name"/>
+  	<result column="remark" property="remark"/>
+  	<collection property="employees" 
+  		select="com.cj.mybatis.mapper.EmployeeMapper.listEmployeesByDept"
+  		column="id" fetchType="lazy">
+  	</collection>
+  </resultMap>
+  <select id="getDepartmentLazy" resultMap="DeptWithEmpsLazyMap">
+    select * from pe_department where id = #{id}
+  </select>
+  
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+  <!-- resource: 引入类路径下资源； url: 引入网络或磁盘路径下资源 -->
+  <properties resource="db.properties"></properties>
+  
+  <settings>
+  	<setting name="mapUnderscoreToCamelCase" value="true"/>
+  </settings>
+  
+  <typeAliases>
+  	<!-- <typeAlias type="com.cj.mybatis.entity.Department"/>
+  	<typeAlias type="com.cj.mybatis.entity.Employee" alias="emp"/> -->
+  	
+  	<!-- 批量起别名
+  		可在类上加@Alias注解特别指定某个类的别名，eg：
+  		@Alias()
+		public Employee{
+		    //...
+		}
+  	 -->
+  	<package name="com.cj.mybatis.entity"/> 
+  </typeAliases>
+  
+  <plugins>
+  	 <plugin interceptor="com.github.pagehelper.PageInterceptor">
+        <property name="rowBoundsWithCount" value="true"/>
+	</plugin>
+  </plugins>
+  
+  <environments default="development"> <!-- development/product/... -->
+  	<environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+		  <property name="driver" value="${jdbc.driver}"/>
+		  <property name="url" value="${jdbc.url}"/>
+		  <property name="username" value="${jdbc.username}"/>
+		  <property name="password" value="${jdbc.password}"/>
+		</dataSource>
+    </environment>
+    <!-- <environment id="product">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+		  <property name="driver" value="${jdbc.driver}"/>
+		  <property name="url" value="${jdbc.url}"/>
+		  <property name="username" value="${jdbc.username}"/>
+		  <property name="password" value="${jdbc.password}"/>
+		</dataSource>
+    </environment> -->
+  </environments>
+  
+  <!-- type="DB_VENDOR": VendorDatabaseIdProvider 得到数据库厂商的不同标识（驱动 Connection.getMetaData().getDatabaseProductName()） -->
+  <databaseIdProvider type="DB_VENDOR">
+  	<!-- 为不同数据库厂商标识起个别名 -->
+  	<property name="MySQL" value="mysql"/>
+  	<property name="Oracle" value="oracle"/>
+  	<property name="SQL Server" value="sqlserver"/>
+  </databaseIdProvider>
+  
+  <mappers>
+  	<!-- 
+  		1. url: 磁盘或网络文件（file:///var/mappers/AuthorMapper.xml）
+  		2. resource: 类路径下文件  （mapper/EmployeeMapper.xml）
+  		3. class: 接口
+  			方式一：接口和mapper文件同名同路径下
+  			方式二：接口上使用注解写sql（无需mapper文件）
+  	-->
+    <mapper resource="mapper/EmployeeMapper.xml"/>
+    <mapper resource="mapper/DepartmentMapper.xml"/>
+    <mapper class="com.cj.mybatis.mapper.EmployeeWithAnnotationMapper"/>
+    
+    <mapper resource="mapper/EmployeeWithDepartmentMapper.xml"/>
+    <mapper resource="mapper/DepartmentWithEmployeesMapper.xml"/>
+     <mapper resource="mapper/UserRoleMapper.xml"/>
+    
+    <!-- 批量注册（规则同class方式） -->
+    <!-- <package name="com.cj.mybatis.mapper"/> -->
+  </mappers>
+
+</configuration>
