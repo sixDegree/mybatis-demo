@@ -30,7 +30,7 @@ public class PageTest {
 			EmployeeMapper employeeMapper = session.getMapper(EmployeeMapper.class);
 
 			System.out.println("------------listEmployees------------");
-			Page<Object> page = PageHelper.startPage(1, 4);
+			Page<Object> page = PageHelper.startPage(2, 4);
 			List<Employee> employees = employeeMapper.listEmployees();
 			for(Employee emp:employees) {
 				System.out.println(emp);

@@ -7,6 +7,7 @@ public class Employee {
 	private String name;
 	private String remark;
 	private Integer departmentId;
+	private EmployeeStatusEnum status;
 	
 	public Integer getId() {
 		return id;
@@ -33,9 +34,17 @@ public class Employee {
 		this.departmentId = departmentId;
 	}
 	
-	@Override
-	public String toString() {
-		return "Employee [id=" + id + ", name=" + name + ", remark=" + remark + ", departmentId=" + departmentId + "]";
+	public EmployeeStatusEnum getStatus() {
+		return status;
+	}
+	public void setStatus(EmployeeStatusEnum status) {
+		this.status = status;
 	}
 	
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", name=" + name + ", remark=" + remark + ", departmentId=" + departmentId
+				+ ", status=" + status + "]";
+	}
+
 }

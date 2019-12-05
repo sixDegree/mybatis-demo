@@ -35,4 +35,45 @@
 	left join pe_department c on a.user_id=c.id and a.user_type='Department';
   </select>
   
+  <insert id="insertUserRole" useGeneratedKeys="true" keyProperty="id">
+  	insert into pe_role(role_name,user_id,user_type)
+  	values(#{roleName},#{userId},#{userType})
+  </insert>
+  
+  <!-- typeHandler: EnumOrdinalTypeHandler -->
+  
+  <!-- method1: -->
+  <!-- <insert id="insertOnEnumOrdinal" useGeneratedKeys="true" keyProperty="id" 
+  	parameterType="com.cj.mybatis.entity.UserRole"> must set parameterType!
+  	insert into pe_role2(role_name,user_id,user_type)
+  	values(
+	  	#{roleName},
+	  	#{userId},
+	  	#{userType,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
+  	)
+  </insert>
+  
+  <resultMap type="com.cj.mybatis.entity.UserRole" id="userRoleEnumOrdinalMap" 
+  	autoMapping="true">
+  	<id column="id" property="id"/>
+  	<result column="user_type" property="userType" 
+  		typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+  </resultMap>
+  <select id="listOnEnumOrdinal" resultMap="userRoleEnumOrdinalMap">
+  	select * from pe_role2
+  </select> -->
+  
+  <!-- method2( configed `typeHandler` in mybatis-config.xml) -->
+  <insert id="insertOnEnumOrdinal" useGeneratedKeys="true" keyProperty="id" >
+  	insert into pe_role2(role_name,user_id,user_type)
+  	values(
+	  	#{roleName},
+	  	#{userId},
+	  	#{userType}
+  	)
+  </insert>
+  <select id="listOnEnumOrdinal" resultType="UserRole">
+  	select * from pe_role2
+  </select>
+  
 </mapper>

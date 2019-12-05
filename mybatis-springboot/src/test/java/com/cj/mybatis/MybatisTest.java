@@ -2,6 +2,7 @@ package com.cj.mybatis;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class MybatisTest {
 	public void testGet() {
 		Employee emp = employeeService.getEmployee(1);
 		System.out.println(emp);
+		
+		emp=employeeService.getEmployeeUseAnnotation(1);
+		System.out.println(emp);
 	}
 	
 	@Test
@@ -72,4 +76,5 @@ public class MybatisTest {
 		List<Integer> results = employeeService.insertMultipleEmployees(5);
 		System.out.println(results);
 	}
+	
 }

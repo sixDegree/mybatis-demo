@@ -3,7 +3,7 @@ package com.cj.mybatis.entity;
 public class UserRole {
 	private Integer id;
 	private Integer userId;
-	private String userType;
+	private UserTypeEnum userType;
 	private String roleName;
 
 	public Integer getId() {
@@ -18,19 +18,24 @@ public class UserRole {
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
-	public String getUserType() {
-		return userType;
-	}
-	public void setUserType(String userType) {
-		this.userType = userType;
-	}
+	
 	public String getRoleName() {
 		return roleName;
 	}
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
-	
+
+
+	public UserTypeEnum getUserType() {
+		return userType;
+	}
+	public void setUserType(UserTypeEnum userType) {
+		this.userType = userType;
+	}
+
+
+
 	private String name;
 	private String remark;
 	

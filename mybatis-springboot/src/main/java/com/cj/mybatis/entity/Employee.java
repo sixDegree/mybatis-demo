@@ -1,10 +1,23 @@
 package com.cj.mybatis.entity;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Employee {
 	private Integer id;
 	private String name;
 	private String remark;
 	private Integer departmentId;
+	
+	/*
+	 show variables like '%time_zone';
+	 system_time_zone null
+	 time_zone		  SYSTEM
+	 */
+	//@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date updateTime;
 	
 	public Employee() {
 		
@@ -42,8 +55,18 @@ public class Employee {
 		this.departmentId = departmentId;
 	}
 	
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
 	@Override
 	public String toString() {
-		return "Employee [id=" + id + ", name=" + name + ", remark=" + remark + ", departmentId=" + departmentId + "]";
+		return "Employee [id=" + id + ", name=" + name + ", remark=" + remark + ", departmentId=" + departmentId
+				+ ", updateTime=" + updateTime + "]";
 	}
+	
 }

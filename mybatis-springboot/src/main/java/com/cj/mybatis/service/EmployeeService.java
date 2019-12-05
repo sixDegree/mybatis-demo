@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cj.mybatis.entity.Employee;
 import com.cj.mybatis.mapper.EmployeeMapper;
+import com.cj.mybatis.mapper.EmployeeWithAnnotationMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -18,8 +19,15 @@ public class EmployeeService {
 	@Autowired
 	private EmployeeMapper employeeMapper;
 	
+	@Autowired
+	private EmployeeWithAnnotationMapper employeeWithAnnotationMapper;
+	
 	public void sayHello() {
 		System.out.println("EmployeeService sayHello....");
+	}
+	
+	public Employee getEmployeeUseAnnotation(Integer id) {
+		return this.employeeWithAnnotationMapper.getEmployee(id);
 	}
 	
 	public List<Employee> listAll(){

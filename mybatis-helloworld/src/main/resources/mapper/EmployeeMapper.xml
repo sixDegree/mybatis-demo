@@ -5,21 +5,21 @@
 
 <mapper namespace="com.cj.mybatis.mapper.EmployeeMapper">
   <!-- id: 标识 ;	resultType:	返回值类型 ;	#{id}: 从传递过来的参数中取出id值   -->
-  <select id="getEmployee" resultType="Employee" databaseId="mysql"> <!-- Employee/com.cj.mybatis.entity.Employee -->
+  <select id="getEmployee" resultType="Employee" > <!-- databaseId="mysql" --> <!-- Employee/com.cj.mybatis.entity.Employee -->
     <!-- select id,name,remark,department_id as departmentId from pe_employee where id = #{id} -->
-    select * from pe_employee where id = #{id}
+    select id,name,remark,department_id from pe_employee where id = #{id}
   </select>
   
   <select id="listEmployees" resultType="Employee">
-  	select * from pe_employee
+  	select id,name,remark,department_id from pe_employee
   </select>
   
   <select id="listEmployeesByDept" resultType="Employee">
-  	select * from pe_employee where department_id=#{deptId}
+  	select id,name,remark,department_id from pe_employee where department_id=#{deptId}
   </select>
   
   <select id="listEmployeesByExample" resultType="Employee">
-  	select * from pe_employee 
+  	select id,name,remark,department_id from pe_employee 
   	where 1=1
   	<if test="id!=null"> and id=#{id} </if>
   	<if test="name!=null"> and name=#{name} </if>
@@ -28,11 +28,11 @@
   
   <select id="listEmployeesByNameLike" resultType="Employee">
   	<bind name="namePatten" value="'%' + name + '%'" />
-    select * from pe_employee where name like #{namePatten}
+    select id,name,remark,department_id from pe_employee where name like #{namePatten}
   </select>
   
   <select id="listEmployeesByDeptIds" resultType="Employee">
-  	select * from pe_employee where department_id in 
+  	select id,name,remark,department_id from pe_employee where department_id in 
   	<foreach collection="list" item="deptId" separator="," open="(" close=")">
   		#{deptId}
   	</foreach>
@@ -58,5 +58,43 @@
 	<if test="remark!=null">remark=#{remark},</if>
 	<if test="departmentId!=null">department_id=#{departmentId}</if>
   </sql>
+  
+  <insert id="insertEmployee" useGeneratedKeys="true" keyProperty="id">
+  	insert into pe_employee(name,remark,department_id) 
+  	values (#{name},#{remark},#{departmentId})
+  </insert>
+  
+  <!-- method1: -->
+  <!-- <insert id="insertEmployeeOnMyEnum" useGeneratedKeys="true" keyProperty="id" 
+  	parameterType="Employee">  must set parameterType!
+  	insert into pe_employee(name,remark,department_id,status)
+  	values (#{name},#{remark},#{departmentId},#{status,typeHandler=com.cj.mybatis.extend.MyEnumCodeTypeHandler})
+  </insert>
+  
+  <resultMap type="Employee" id="employeesOnMyEnumMap" autoMapping="true">
+  	<id column="id" property="id"/>
+  	<result column="status" property="status" 
+  		typeHandler="com.cj.mybatis.extend.MyEnumCodeTypeHandler"/>
+  </resultMap>
+  <select id="listEmployeesOnMyEnum" resultMap="employeesOnMyEnumMap">
+  	select * from pe_employee
+  </select> -->
+  
+  <!-- method2 ( configed `typeHandler` in mybatis-config.xml)-->
+  <insert id="insertEmployeeOnMyEnum" useGeneratedKeys="true" keyProperty="id">
+  	insert into pe_employee(name,remark,department_id,status)
+  	values (#{name},#{remark},#{departmentId},#{status})
+  </insert>
+  <select id="listEmployeesOnMyEnum" resultType="Employee">
+  	select * from pe_employee
+  </select>
+  
+  <select id="getPageResult" statementType="CALLABLE" resultType="Employee">
+  	{call get_page_result(
+  		#{pageNum,mode=IN},
+  		#{pageSize,mode=IN},
+  		#{total,mode=OUT,jdbcType=INTEGER}
+  	)}
+  </select>
   
 </mapper>

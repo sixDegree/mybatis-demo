@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+  <!-- resource: 引入类路径下资源； url: 引入网络或磁盘路径下资源 -->
+  <properties resource="db.properties"></properties>
+  
+  <settings>
+  	<setting name="mapUnderscoreToCamelCase" value="true"/>
+  </settings>
+  
+  <typeAliases>
+  	<package name="com.cj.mybatis.entity"/> 
+  </typeAliases>
+  
+  <typeHandlers>
+  	<typeHandler handler="com.cj.mybatis.extend.MyEnumCodeTypeHandler" javaType="com.cj.mybatis.entity.EmployeeStatusEnum"/>
+  	<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.cj.mybatis.entity.UserTypeEnum"/>
+  	<!-- 配置自定义的TypeHandler -->
+  	<!-- 或者处理某个字段时设置,eg:
+  		#{status,typeHandler=xxx} 
+  		
+  		<resultMap>
+  			<result column="" property="" typeHandler="xxx" />
+  		</resultMap>	
+  		
+  		注：若在位置参数中配置typeHandler，应保证insert/select用的TypeHandler是一样的
+  	-->
+  </typeHandlers>
+  
+  <plugins>
+  	 <plugin interceptor="com.github.pagehelper.PageInterceptor">
+        <property name="rowBoundsWithCount" value="true"/>
+	</plugin>
+	<!-- <plugin interceptor="com.cj.mybatis.extend.MyFirstPlugin">
+		<property name="testname" value="first-plugin"/>
+	</plugin>
+	<plugin interceptor="com.cj.mybatis.extend.MySecondPlugin">
+		<property name="testname" value="second-plugin"/>
+	</plugin> -->
+  </plugins>
+  
+  <environments default="development">
+  	<environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+		  <property name="driver" value="${jdbc.driver}"/>
+		  <property name="url" value="${jdbc.url}"/>
+		  <property name="username" value="${jdbc.username}"/>
+		  <property name="password" value="${jdbc.password}"/>
+		</dataSource>
+    </environment>
+  </environments>
+  
+ 
+  <mappers>
+    <mapper resource="mapper/EmployeeMapper.xml"/>
+    <mapper resource="mapper/UserRoleMapper.xml" />
+  </mappers>
+
+</configuration>

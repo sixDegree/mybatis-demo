@@ -55,5 +55,6 @@ spring:
 #   mapper-locations: classpath:mybatis/mapper/*Mapper.xml
 #   config-location:  classpath:mybatis-config.xml
    
-
+#swagger:
+#  enable: true
       

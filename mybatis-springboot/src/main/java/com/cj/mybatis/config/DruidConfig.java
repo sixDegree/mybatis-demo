@@ -16,7 +16,7 @@ import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 
 @Configuration
-public class DruidConfiguration {
+public class DruidConfig {
 	
 	//https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter
 	
